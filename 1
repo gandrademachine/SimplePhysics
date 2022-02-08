@@ -1,0 +1,36 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from calculus import Derivative 
+
+class position:
+    def __init__(self, TimeArray, Function):
+        self.time = TimeArray
+        self.function = Function
+    def Position(self):
+        return eval(self.function+"(self.time)")
+    def Velocity(self, t):
+        der = Derivative(self.time,self.function)
+        if( t in self.time):
+            i, = np.where(self.time == t)
+            return der.fstDerivative(i)
+    def Plot (self, t):
+        slope = self.Velocity(t)
+        vectors = np.array([t+np.cos(t), eval(self.function+"(t)")+np.sin(t)])
+        tail = [t, self.function+"(t)"]
+        fig, ax = plt.subplots(1)
+        ax.quiver(*tail,
+                   vectors,
+                   scale=1)
+                          
+        ax.set_xlim((-1, vectors.max()+1))
+        ax.set_ylim((-1, vectors.max()+1))
+        plt.plot(t,self.Position())
+
+t = np.arange(0,2*np.pi,0.1)
+f = "np.exp"
+p = position(t,f)
+# print(p.Velocity(0.4))
+plt.plot(t,p.Position(),'-.k')
+p.Plot(0.4)
+plt.grid()
+plt.show()
